@@ -47,13 +47,13 @@ class Ball(pygame.sprite.Sprite):
             self.speed_y = 0
 
     def update(self):
-        if self.rect.x + self.speed_x + 20 > width:
+        if self.rect.x + self.speed_x + 40 > width:
             self.speed_x *= -1
-        if self.rect.y + self.speed_y + 20 > height:
+        if self.rect.y + self.speed_y + 40 > height:
             self.speed_y *= -1
-        if self.rect.x + self.speed_x < 0:
+        if self.rect.x + self.speed_x - 20 < 0:
             self.speed_x *= -1
-        if self.rect.y + self.speed_y < 0:
+        if self.rect.y + self.speed_y - 20 < 0:
             self.speed_y *= -1
         for i in all_sprites:
             self.rect = self.rect.move(self.dist_x + self.speed_x - self.rect.x,
@@ -123,7 +123,6 @@ Corner()
 
 running = True
 screen.fill((50, 200, 50))
-pygame.draw.rect(screen, (200, 0, 0), (0, 0, 30, 30))
 drawing = False
 clock = pygame.time.Clock()
 while running:
@@ -133,6 +132,10 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN:
             Ball(event.pos)
     screen.fill((50, 200, 50))
+    pygame.draw.rect(screen, (150, 75, 0), (0, 0, 600, 20))
+    pygame.draw.rect(screen, (150, 75, 0), (0, 0, 20, 320))
+    pygame.draw.rect(screen, (150, 75, 0), (0, 300, 600, 320))
+    pygame.draw.rect(screen, (150, 75, 0), (580, 0, 600, 320))
     corners.draw(screen)
     all_sprites.draw(screen)
     all_sprites.update()
