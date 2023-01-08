@@ -37,14 +37,35 @@ class Ball(pygame.sprite.Sprite):
 
     def change_route(self, other):
         if self.speed_x != 0 and self.speed_y != 0:
-            other.speed_x = abs(self.rect.x - other.rect.x) * (
+            other.speed_x += abs(self.rect.x - other.rect.x) * (
                     self.speed_x // abs(self.speed_x)) / 10
-            other.speed_y = abs(self.rect.y - other.rect.y) * (
+            other.speed_y += abs(self.rect.y - other.rect.y) * (
                     self.speed_y // abs(self.speed_y)) / 10
             self.rect = self.rect.move(-(self.dist_x + self.speed_x - self.rect.x),
                                        -(self.dist_y + self.speed_y - self.rect.y))
-            self.speed_x = 0
-            self.speed_y = 0
+            if self.speed_y > 0:
+                if self.speed_x > other.speed_x:
+                    self.speed_x = -other.speed_y
+                    self.speed_y = other.speed_x
+                elif other.speed_x == 0:
+                    self.speed_y = -other.speed_y
+                    self.speed_x = other.speed_x
+                else:
+                    self.speed_x = other.speed_y
+                    self.speed_y = -other.speed_x
+            elif self.speed_y < 0:
+                if self.speed_x < other.speed_x:
+                    self.speed_x = -other.speed_y
+                    self.speed_y = other.speed_x
+                elif other.speed_x == 0:
+                    self.speed_y = -other.speed_y
+                    self.speed_x = other.speed_x
+                else:
+                    self.speed_x = other.speed_y
+                    self.speed_y = -other.speed_x
+            else:
+                self.speed_y = other.speed_y
+                self.speed_x = -other.speed_x
 
     def update(self):
         if self.rect.x + self.speed_x + 40 > width:
@@ -141,7 +162,7 @@ while running:
     all_sprites.update()
     pygame.display.flip()
     clock.tick(150)
-    if sum(map(lambda x: x.score, corners)) >= 16:
+    if sum(map(lambda x: x.score, corners)) == 16:
         screen.fill((0, 0, 0))
         pygame.display.flip()
         pygame.time.delay(1000)
