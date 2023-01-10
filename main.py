@@ -41,6 +41,11 @@ class Ball(pygame.sprite.Sprite):
                     self.speed_x // abs(self.speed_x)) / 10
             other.speed_y += abs(self.rect.y - other.rect.y) * (
                     self.speed_y // abs(self.speed_y)) / 10
+            d1 = (self.speed_x ** 2 + self.speed_y ** 2) ** 0.5
+            d2 = (other.speed_x ** 2 + other.speed_y ** 2) ** 0.5
+            dif = d1 / d2
+            other.speed_x = other.speed_x * dif / 2
+            other.speed_y = other.speed_y * dif / 2
             self.rect = self.rect.move(-(self.dist_x + self.speed_x - self.rect.x),
                                        -(self.dist_y + self.speed_y - self.rect.y))
             if self.speed_y > 0:
