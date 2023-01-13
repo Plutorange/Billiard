@@ -10,7 +10,7 @@ class Main_Menu(object):
         main_menu.setObjectName("MainMenu")
         main_menu.resize(500, 325)
         main_menu.setMouseTracking(True)
-        main_menu.setStyleSheet("background-color: rgb(40, 140, 90);")
+        main_menu.setStyleSheet("background-color: rgb(50, 200, 50);")
         self.line = QtWidgets.QFrame(main_menu)
         self.line.setGeometry(QtCore.QRect(10, 80, 590, 20))
         self.line.setFrameShape(QtWidgets.QFrame.HLine)
@@ -19,12 +19,12 @@ class Main_Menu(object):
         self.l_title = QtWidgets.QLabel(main_menu)
         self.l_title.setGeometry(QtCore.QRect(170, 20, 230, 40))
         self.l_title.setStyleSheet("color: rgb(240, 240, 240);\n"
-                                   "font: 30pt \".SF NS Text\";")
+                                   "font: 25pt \".SF NS Text\";")
         self.l_title.setObjectName("l_title")
         self.btn_ok = QtWidgets.QPushButton(main_menu)
         self.btn_ok.setGeometry(QtCore.QRect(180, 200, 160, 30))
         self.btn_ok.setStyleSheet("color: rgb(240, 240, 240);\n"
-                                  "background-color: rgb(70, 200, 40);\n"
+                                  "background-color: rgb(40, 140, 90);\n"
                                   "border-style:outset;\n"
                                   "border-radius:10px;\n"
                                   "font: 14pt \"Arial\";")
@@ -32,7 +32,7 @@ class Main_Menu(object):
         self.btn_newuser = QtWidgets.QPushButton(main_menu)
         self.btn_newuser.setGeometry(QtCore.QRect(180, 240, 161, 31))
         self.btn_newuser.setStyleSheet("color: rgb(240, 240, 240);\n"
-                                       "background-color: rgb(70, 200, 40);\n"
+                                       "background-color: rgb(40, 140, 90);\n"
                                        "border-style:outset;\n"
                                        "border-radius:10px;\n"
                                        "font: 14pt \"Arial\";")
@@ -58,11 +58,12 @@ class Main_Menu(object):
     def retranslateUi(self, main_menu):
         _translate = QtCore.QCoreApplication.translate
         main_menu.setWindowTitle(_translate("main_menu", "Шарики"))
-        self.l_title.setText(_translate("main_menu", "Шарики"))
+        self.l_title.setText(_translate("main_menu", "   Шарики"))
         self.btn_ok.setText(_translate("main_menu", "Далее"))
         self.btn_newuser.setText(_translate("main_menu", "Регистрация"))
         self.txt_username.setPlaceholderText(_translate("main_menu", "Введите имя игрока 1"))
         self.txt_password.setPlaceholderText(_translate("main_menu", "Введите пароль"))
+
 
 
 class Ui_NewUser(object):
@@ -70,10 +71,10 @@ class Ui_NewUser(object):
     def setupUi(self, NewUser):
         NewUser.setObjectName("NewUser")
         NewUser.resize(565, 400)
-        NewUser.setStyleSheet("background-color: rgb(50, 140, 90);")
+        NewUser.setStyleSheet("background-color: rgb(50, 200, 50);")
         self.l_newuser = QtWidgets.QLabel(NewUser)
         self.l_newuser.setGeometry(QtCore.QRect(180, 10, 180, 30))
-        self.l_newuser.setStyleSheet("font: 24pt \".SF NS Text\";\n"
+        self.l_newuser.setStyleSheet("font: 20pt \".SF NS Text\";\n"
                                      "color: rgb(230, 240, 240);\n"
                                      "")
         self.l_newuser.setAlignment(QtCore.Qt.AlignCenter)
@@ -116,7 +117,7 @@ class Ui_NewUser(object):
         self.btn_ok = QtWidgets.QPushButton(NewUser)
         self.btn_ok.setGeometry(QtCore.QRect(190, 270, 160, 30))
         self.btn_ok.setStyleSheet("color: rgb(250, 255, 255);\n"
-                                  "background-color: rgb(73, 199, 41);\n"
+                                  "background-color: rgb(40, 140, 90);\n"
                                   "border-style:outset;\n"
                                   "border-radius:10px;\n"
                                   "font: 14pt \"Arial\";")
@@ -124,7 +125,7 @@ class Ui_NewUser(object):
         self.Back = QtWidgets.QPushButton(NewUser)
         self.Back.setGeometry(QtCore.QRect(190, 320, 160, 30))
         self.Back.setStyleSheet("color: rgb(250, 255, 255);\n"
-                                "background-color: rgb(70, 200, 40);\n"
+                                "background-color: rgb(40, 140, 90);\n"
                                 "border-style:outset;\n"
                                 "border-radius:10px;\n"
                                 "font: 14pt \"Arial\";")
@@ -136,13 +137,14 @@ class Ui_NewUser(object):
     def retranslateUi(self, NewUser):
         _translate = QtCore.QCoreApplication.translate
         NewUser.setWindowTitle(_translate("NewPlayer", "НовыйИгрок"))
-        self.l_newuser.setText(_translate("NewPlayer", "Шарики"))
+        self.l_newuser.setText(_translate("NewPlayer", "  Шарики"))
         self.txt_firstname.setPlaceholderText(_translate("NewPlayer", "Введите свое имя"))
         self.txt_lastname.setPlaceholderText(_translate("NewPlayer", "Введите свою фамилию"))
         self.txt_username.setPlaceholderText(_translate("NewPlayer", "Введите имя игрока"))
         self.lineEdit.setPlaceholderText(_translate("NewPlayer", "Введите пароль"))
         self.btn_ok.setText(_translate("NewPlayer", "Далее"))
         self.Back.setText(_translate("NewPlayer", "Назад"))
+
 
 
 class Login(QtWidgets.QWidget, Main_Menu):
@@ -194,6 +196,7 @@ class Login(QtWidgets.QWidget, Main_Menu):
 
     def btn_newuser_handler(self):
         self.switch_window.emit()
+
 
 
 class Newuser(QtWidgets.QWidget, Ui_NewUser):
@@ -258,6 +261,7 @@ class Newuser(QtWidgets.QWidget, Ui_NewUser):
             self.pop_message(text="Вы были успешно зарегистрированы!")
 
 
+
 class Controller:
 
     def __init__(self):
@@ -281,7 +285,7 @@ class Main_Menu_2(object):
         main_menu_2.setObjectName("MainMenu")
         main_menu_2.resize(500, 325)
         main_menu_2.setMouseTracking(True)
-        main_menu_2.setStyleSheet("background-color: rgb(40, 140, 90);")
+        main_menu_2.setStyleSheet("background-color: rgb(50, 200, 50);")
         self.line = QtWidgets.QFrame(main_menu_2)
         self.line.setGeometry(QtCore.QRect(10, 80, 590, 20))
         self.line.setFrameShape(QtWidgets.QFrame.HLine)
@@ -290,12 +294,12 @@ class Main_Menu_2(object):
         self.l_title = QtWidgets.QLabel(main_menu_2)
         self.l_title.setGeometry(QtCore.QRect(170, 20, 230, 40))
         self.l_title.setStyleSheet("color: rgb(240, 240, 240);\n"
-                                   "font: 30pt \".SF NS Text\";")
+                                   "font: 25pt \".SF NS Text\";")
         self.l_title.setObjectName("l_title")
         self.btn_ok = QtWidgets.QPushButton(main_menu_2)
         self.btn_ok.setGeometry(QtCore.QRect(180, 200, 160, 30))
         self.btn_ok.setStyleSheet("color: rgb(240, 240, 240);\n"
-                                  "background-color: rgb(70, 200, 40);\n"
+                                  "background-color: rgb(40, 140, 90);\n"
                                   "border-style:outset;\n"
                                   "border-radius:10px;\n"
                                   "font: 14pt \"Arial\";")
@@ -303,7 +307,7 @@ class Main_Menu_2(object):
         self.btn_newuser = QtWidgets.QPushButton(main_menu_2)
         self.btn_newuser.setGeometry(QtCore.QRect(180, 240, 161, 31))
         self.btn_newuser.setStyleSheet("color: rgb(240, 240, 240);\n"
-                                       "background-color: rgb(70, 200, 40);\n"
+                                       "background-color: rgb(40, 140, 90);\n"
                                        "border-style:outset;\n"
                                        "border-radius:10px;\n"
                                        "font: 14pt \"Arial\";")
@@ -329,10 +333,10 @@ class Main_Menu_2(object):
     def retranslateUi_2(self, main_menu_2):
         _translate = QtCore.QCoreApplication.translate
         main_menu_2.setWindowTitle(_translate("main_menu_2", "Шарики"))
-        self.l_title.setText(_translate("main_menu_2", "Шарики"))
+        self.l_title.setText(_translate("main_menu_2", "   Шарики"))
         self.btn_ok.setText(_translate("main_menu_2", "Далее"))
         self.btn_newuser.setText(_translate("main_menu_2", "Регистрация"))
-        self.txt_username.setPlaceholderText(_translate("main_menu_2", "Введите имя игрока2"))
+        self.txt_username.setPlaceholderText(_translate("main_menu_2", "Введите имя игрока 2"))
         self.txt_password.setPlaceholderText(_translate("main_menu_2", "Введите пароль"))
 
 
@@ -341,10 +345,10 @@ class Ui_NewUser_2(object):
     def setupUi(self, NewUser_2):
         NewUser_2.setObjectName("NewUser_2")
         NewUser_2.resize(565, 400)
-        NewUser_2.setStyleSheet("background-color: rgb(50, 140, 90);")
+        NewUser_2.setStyleSheet("background-color: rgb(50, 200, 50);")
         self.l_newuser = QtWidgets.QLabel(NewUser_2)
         self.l_newuser.setGeometry(QtCore.QRect(180, 10, 180, 30))
-        self.l_newuser.setStyleSheet("font: 24pt \".SF NS Text\";\n"
+        self.l_newuser.setStyleSheet("font: 20pt \".SF NS Text\";\n"
                                      "color: rgb(230, 240, 240);\n"
                                      "")
         self.l_newuser.setAlignment(QtCore.Qt.AlignCenter)
@@ -387,7 +391,7 @@ class Ui_NewUser_2(object):
         self.btn_ok = QtWidgets.QPushButton(NewUser_2)
         self.btn_ok.setGeometry(QtCore.QRect(190, 270, 160, 30))
         self.btn_ok.setStyleSheet("color: rgb(250, 255, 255);\n"
-                                  "background-color: rgb(73, 199, 41);\n"
+                                  "background-color: rgb(40, 140, 90);\n"
                                   "border-style:outset;\n"
                                   "border-radius:10px;\n"
                                   "font: 14pt \"Arial\";")
@@ -395,7 +399,7 @@ class Ui_NewUser_2(object):
         self.Back = QtWidgets.QPushButton(NewUser_2)
         self.Back.setGeometry(QtCore.QRect(190, 320, 160, 30))
         self.Back.setStyleSheet("color: rgb(250, 255, 255);\n"
-                                "background-color: rgb(70, 200, 40);\n"
+                                "background-color: rgb(40, 140, 90);\n"
                                 "border-style:outset;\n"
                                 "border-radius:10px;\n"
                                 "font: 14pt \"Arial\";")
@@ -407,7 +411,7 @@ class Ui_NewUser_2(object):
     def retranslateUi(self, NewUser_2):
         _translate = QtCore.QCoreApplication.translate
         NewUser_2.setWindowTitle(_translate("NewPlayer2", "НовыйИгрок2"))
-        self.l_newuser.setText(_translate("NewPlayer2", "Шарики"))
+        self.l_newuser.setText(_translate("NewPlayer2", "  Шарики"))
         self.txt_firstname.setPlaceholderText(_translate("NewPlayer2", "Введите свое имя"))
         self.txt_lastname.setPlaceholderText(_translate("NewPlayer2", "Введите свою фамилию"))
         self.txt_username.setPlaceholderText(_translate("NewPlayer2", "Введите имя игрока2"))
@@ -544,6 +548,7 @@ class Controller_2:
         self.newuser.switch_window.connect(self.show_login_page)
         self.login.close()
         self.newuser.show()
+
 
 
 def main():
