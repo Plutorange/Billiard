@@ -70,11 +70,11 @@ class Ui_NewUser(object):
 
     def setupUi(self, NewUser):
         NewUser.setObjectName("NewUser")
-        NewUser.resize(565, 400)
+        NewUser.resize(500, 325)
         NewUser.setStyleSheet("background-color: rgb(50, 200, 50);")
         self.l_newuser = QtWidgets.QLabel(NewUser)
-        self.l_newuser.setGeometry(QtCore.QRect(180, 10, 180, 30))
-        self.l_newuser.setStyleSheet("font: 20pt \".SF NS Text\";\n"
+        self.l_newuser.setGeometry(QtCore.QRect(150, 5, 180, 45))
+        self.l_newuser.setStyleSheet("font: 23pt \".SF NS Text\";\n"
                                      "color: rgb(230, 240, 240);\n"
                                      "")
         self.l_newuser.setAlignment(QtCore.Qt.AlignCenter)
@@ -86,36 +86,36 @@ class Ui_NewUser(object):
         self.line.setObjectName("line")
         self.txt_firstname = QtWidgets.QLineEdit(NewUser)
         self.txt_firstname.setEnabled(True)
-        self.txt_firstname.setGeometry(QtCore.QRect(30, 80, 230, 40))
+        self.txt_firstname.setGeometry(QtCore.QRect(30, 80, 200, 35))
         self.txt_firstname.setStyleSheet("background-color: rgb(210, 210, 210);\n"
                                          "border-style:outset;\n"
                                          "border-radius:10px;\n"
-                                         "font: 14pt \"Arial\";")
+                                         "font: 10pt \"Arial\";")
         self.txt_firstname.setText("")
         self.txt_firstname.setObjectName("txt_firstname")
         self.txt_lastname = QtWidgets.QLineEdit(NewUser)
-        self.txt_lastname.setGeometry(QtCore.QRect(290, 80, 230, 40))
+        self.txt_lastname.setGeometry(QtCore.QRect(260, 80, 200, 35))
         self.txt_lastname.setStyleSheet("background-color: rgb(210, 210, 210);\n"
                                         "border-style:outset;\n"
                                         "border-radius:10px;\n"
-                                        "font: 14pt \"Arial\";")
+                                        "font: 10pt \"Arial\";")
         self.txt_lastname.setObjectName("txt_lastname")
         self.txt_username = QtWidgets.QLineEdit(NewUser)
-        self.txt_username.setGeometry(QtCore.QRect(30, 200, 230, 40))
+        self.txt_username.setGeometry(QtCore.QRect(30, 135, 200, 35))
         self.txt_username.setStyleSheet("background-color: rgb(210, 210, 210);\n"
                                         "border-style:outset;\n"
                                         "border-radius:10px;\n"
-                                        "font: 14pt \"Arial\";")
+                                        "font: 10pt \"Arial\";")
         self.txt_username.setObjectName("txt_username")
-        self.lineEdit = QtWidgets.QLineEdit(NewUser)
-        self.lineEdit.setGeometry(QtCore.QRect(290, 200, 231, 41))
-        self.lineEdit.setStyleSheet("background-color: rgb(210, 210, 210);\n"
+        self.txt_password = QtWidgets.QLineEdit(NewUser)
+        self.txt_password.setGeometry(QtCore.QRect(260, 135, 200, 35))
+        self.txt_password.setStyleSheet("background-color: rgb(210, 210, 210);\n"
                                     "border-style:outset;\n"
                                     "border-radius:10px;\n"
-                                    "font: 14pt \"Arial\";")
-        self.lineEdit.setObjectName("lineEdit")
+                                    "font: 10pt \"Arial\";")
+        self.txt_password.setObjectName("txt_password")
         self.btn_ok = QtWidgets.QPushButton(NewUser)
-        self.btn_ok.setGeometry(QtCore.QRect(190, 270, 160, 30))
+        self.btn_ok.setGeometry(QtCore.QRect(180, 210, 130, 30))
         self.btn_ok.setStyleSheet("color: rgb(250, 255, 255);\n"
                                   "background-color: rgb(40, 140, 90);\n"
                                   "border-style:outset;\n"
@@ -123,7 +123,7 @@ class Ui_NewUser(object):
                                   "font: 14pt \"Arial\";")
         self.btn_ok.setObjectName("btn_ok")
         self.Back = QtWidgets.QPushButton(NewUser)
-        self.Back.setGeometry(QtCore.QRect(190, 320, 160, 30))
+        self.Back.setGeometry(QtCore.QRect(180, 255, 130, 30))
         self.Back.setStyleSheet("color: rgb(250, 255, 255);\n"
                                 "background-color: rgb(40, 140, 90);\n"
                                 "border-style:outset;\n"
@@ -141,7 +141,7 @@ class Ui_NewUser(object):
         self.txt_firstname.setPlaceholderText(_translate("NewPlayer", "Введите свое имя"))
         self.txt_lastname.setPlaceholderText(_translate("NewPlayer", "Введите свою фамилию"))
         self.txt_username.setPlaceholderText(_translate("NewPlayer", "Введите имя игрока"))
-        self.lineEdit.setPlaceholderText(_translate("NewPlayer", "Введите пароль"))
+        self.txt_password.setPlaceholderText(_translate("NewPlayer", "Введите пароль"))
         self.btn_ok.setText(_translate("NewPlayer", "Далее"))
         self.Back.setText(_translate("NewPlayer", "Назад"))
 
