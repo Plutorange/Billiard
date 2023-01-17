@@ -68,6 +68,7 @@ class Main_Menu(object):
 
 class Ui_NewUser(object):
 
+
     def setupUi(self, NewUser):
         NewUser.setObjectName("NewUser")
         NewUser.resize(500, 325)
@@ -107,13 +108,13 @@ class Ui_NewUser(object):
                                         "border-radius:10px;\n"
                                         "font: 10pt \"Arial\";")
         self.txt_username.setObjectName("txt_username")
-        self.txt_password = QtWidgets.QLineEdit(NewUser)
-        self.txt_password.setGeometry(QtCore.QRect(260, 135, 200, 35))
-        self.txt_password.setStyleSheet("background-color: rgb(210, 210, 210);\n"
+        self.lineEdit = QtWidgets.QLineEdit(NewUser)
+        self.lineEdit.setGeometry(QtCore.QRect(260, 135, 200, 35))
+        self.lineEdit.setStyleSheet("background-color: rgb(210, 210, 210);\n"
                                     "border-style:outset;\n"
                                     "border-radius:10px;\n"
                                     "font: 10pt \"Arial\";")
-        self.txt_password.setObjectName("txt_password")
+        self.lineEdit.setObjectName("lineEdit")
         self.btn_ok = QtWidgets.QPushButton(NewUser)
         self.btn_ok.setGeometry(QtCore.QRect(180, 210, 130, 30))
         self.btn_ok.setStyleSheet("color: rgb(250, 255, 255);\n"
@@ -141,7 +142,7 @@ class Ui_NewUser(object):
         self.txt_firstname.setPlaceholderText(_translate("NewPlayer", "Введите свое имя"))
         self.txt_lastname.setPlaceholderText(_translate("NewPlayer", "Введите свою фамилию"))
         self.txt_username.setPlaceholderText(_translate("NewPlayer", "Введите имя игрока"))
-        self.txt_password.setPlaceholderText(_translate("NewPlayer", "Введите пароль"))
+        self.lineEdit.setPlaceholderText(_translate("NewPlayer", "Введите пароль"))
         self.btn_ok.setText(_translate("NewPlayer", "Далее"))
         self.Back.setText(_translate("NewPlayer", "Назад"))
 
