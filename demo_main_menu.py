@@ -61,7 +61,6 @@ class Game_Menu(object):
         self.retranslateUi(game_menu)
         QtCore.QMetaObject.connectSlotsByName(game_menu)
 
-
     def retranslateUi(self, game_menu):
         _translate = QtCore.QCoreApplication.translate
         game_menu.setWindowTitle(_translate("game_menu", "Шарики"))
@@ -73,6 +72,8 @@ class Game_Menu(object):
 
 
 class Game_Buttons(QtWidgets.QWidget, Game_Menu):
+    switch_window2 = QtCore.pyqtSignal()
+
     def __init__(self):
         QtWidgets.QWidget.__init__(self)
         self.setupUi(self)
@@ -80,13 +81,14 @@ class Game_Buttons(QtWidgets.QWidget, Game_Menu):
         self.btn_unlogin.clicked.connect(self.unlogin_)
         self.btn_stats.clicked.connect(self.stats_)
         self.btn_play.clicked.connect(self.play_)
-
+        self.stats = Statistics()
 
     def play_(self):
         pass
 
     def stats_(self):
-        pass
+        self.switch_window2.emit()
+        self.stats.show_()
 
     def unlogin_(self):
         self.cont = Controller()
@@ -98,6 +100,85 @@ class Game_Buttons(QtWidgets.QWidget, Game_Menu):
         self.close()
 
 
+class Statistics_Ui(object):
+
+    def setupUi(self, stats_table):
+        stats_table.setObjectName("stats_table")
+        stats_table.resize(800, 600)
+        stats_table.setStyleSheet("background-color: rgb(50, 200, 50);")
+        self.tableWidget = QtWidgets.QTableWidget(stats_table)
+        self.tableWidget.setGeometry(QtCore.QRect(50, 100, 217, 200))
+        self.tableWidget.setStyleSheet("background-color: rgb(189, 193, 193);\n"
+                                       "color: rgb(27, 28, 28);")
+        self.tableWidget.setRowCount(5)
+        self.tableWidget.setColumnCount(2)
+        self.tableWidget.setObjectName("tableWidget")
+        self.ball_image = QLabel(stats_table)
+        self.pixmap = QPixmap('ball.png')
+        self.ball_image.move(400, 175)
+        self.ball_image.setPixmap(self.pixmap)
+        self.l_title = QtWidgets.QLabel(stats_table)
+        self.l_title.setGeometry(QtCore.QRect(280, 10, 250, 50))
+        self.l_title.setStyleSheet("\n"
+                                   "color: White;\n"
+                                   "font: 26pt \".SF NS Text\";")
+        self.l_title.setObjectName("l_title")
+        self.l_title_1 = QtWidgets.QLabel(stats_table)
+        self.l_title_1.setGeometry(QtCore.QRect(80, 50, 200, 30))
+        self.l_title_1.setStyleSheet("\n"
+                                   "color: White;\n"
+                                   "font: 14pt \".SF NS Text\";")
+        self.l_title_1.setObjectName("l_title_1")
+        self.l_title_2 = QtWidgets.QLabel(stats_table)
+        self.l_title_2.setGeometry(QtCore.QRect(520, 50, 200, 30))
+        self.l_title_2.setStyleSheet("\n"
+                                   "color: White;\n"
+                                   "font: 14pt \".SF NS Text\";")
+        self.l_title_2.setObjectName("l_title_2")
+        self.btn_back = QtWidgets.QPushButton(stats_table)
+        self.btn_back.setGeometry(QtCore.QRect(270, 360, 200, 45))
+        self.btn_back.setStyleSheet("color: rgb(240, 240, 240);\n"
+                                    "background-color: rgb(40, 140, 90);\n"
+                                    "border-style:outset;\n"
+                                    "border-radius:10px;\n"
+                                    "font: 14pt \"Arial\";")
+        self.btn_back.setObjectName("btn_back")
+
+        self.retranslateUi(stats_table)
+        QtCore.QMetaObject.connectSlotsByName(stats_table)
+
+    def retranslateUi(self, stats_table):
+        _translate = QtCore.QCoreApplication.translate
+        stats_table.setWindowTitle(_translate("stats_table", "Статистика"))
+        self.l_title.setText(_translate("stats_table", "Статистика"))
+        self.btn_back.setText(_translate("stats_table", "Назад"))
+        self.l_title_1.setText(_translate("stats_table", "Таблица лидеров"))
+        self.l_title_2.setText(_translate("stats_table", "Личных побед - "))
+
+class Statistics(QtWidgets.QWidget, Statistics_Ui):
+    switch_window2 = QtCore.pyqtSignal()
+
+    def __init__(self):
+        QtWidgets.QWidget.__init__(self)
+        self.setupUi(self)
+        self.btn_back.clicked.connect(self.btn_back_handler)
+        self.cont = Controller_2()
+
+    def pop_message(self,text=""):
+        msg = QtWidgets.QMessageBox()
+        msg.setText("{}".format(text))
+        msg.exec_()
+
+    def load_data(self):
+        self.tableWidget.setItem(0,0, QtWidgets.QTableWidgetItem(str("Имя")))
+        self.tableWidget.setItem(0,1, QtWidgets.QTableWidgetItem(str("Победы")))
+
+    def btn_back_handler(self):
+        self.cont.next_step()
+
+    def show_(self):
+        self.stats = Statistics()
+        self.stats.show()
 
 class Main_Menu(object):
 
@@ -321,7 +402,6 @@ class Newuser(QtWidgets.QWidget, Ui_NewUser):
         txt_lastname_v = self.txt_lastname.text()
         txt_username_v = self.txt_username.text()
         txt_password_v = self.lineEdit.text()
-
 
         if (len(txt_firstname_v) <= 1
                 and len(txt_lastname_v) <= 1 and
