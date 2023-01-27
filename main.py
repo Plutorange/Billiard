@@ -199,6 +199,7 @@ corners = pygame.sprite.Group()
 corner_image = load_image('corner.png', -1)
 corner_image = pygame.transform.scale(corner_image, (45, 45))
 sp_ball = Ball((500, 400), 15)
+winner = ''
 
 
 def pygame_start():
@@ -207,11 +208,14 @@ def pygame_start():
     for i in range(15):
         Ball((500, 400), i)
     global sp_ball
+    global winner
+    name1, name2 = Login(), Login_2()
+    username, username2 = name1.get_nickname(), name2.get_nickname()
     scream_image = pygame.transform.scale(load_image('scream.jpeg'), (1000, 800))
     bait_image = pygame.transform.scale(load_image('butto.jpeg'), (25, 25))
     turn = 0
-    text1 = pygame.font.Font(None, 40).render('Игрок 1', True, (36, 9, 53))
-    text2 = pygame.font.Font(None, 40).render('Игрок 2', True, (36, 9, 53))
+    text1 = pygame.font.Font(None, 40).render(username, True, (36, 9, 53))
+    text2 = pygame.font.Font(None, 40).render(username2, True, (36, 9, 53))
     p1_balls = [None, []]
     p2_balls = [None, []]
     clock = pygame.time.Clock()
@@ -279,6 +283,10 @@ def pygame_start():
             screen.fill((0, 0, 0))
             pygame.display.flip()
             pygame.time.delay(1000)
+            if len(p1_balls[1]) == 8:
+                winner = username
+            else:
+                winner = username2
             pygame.quit()
 
 
