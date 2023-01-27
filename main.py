@@ -2,7 +2,6 @@ import copy
 import os
 
 import pygame
-from demo_main_menu import main
 
 pygame.init()
 
@@ -149,11 +148,11 @@ class Ball(pygame.sprite.Sprite):
         if abs(self.speed_x) < 0.01 and abs(self.speed_y) < 0.01:
             self.speed_x = 0
             self.speed_y = 0
-        # for i in all_sprites:
-        #     if pygame.sprite.collide_mask(self, i) and self != i:
-        #         self.dist_x -= self.speed_x
-        #         self.dist_y -= self.speed_y
-        #         self.rect = self.rect.move(self.dist_x - self.rect.x, self.dist_y - self.rect.y)
+        for i in all_sprites:
+            if pygame.sprite.collide_mask(self, i) and self != i:
+                self.dist_x -= self.speed_x
+                self.dist_y -= self.speed_y
+                self.rect = self.rect.move(self.dist_x - self.rect.x, self.dist_y - self.rect.y)
         self.speed_x /= 1.005
         self.speed_y /= 1.005
         for i in corners:
@@ -161,7 +160,6 @@ class Ball(pygame.sprite.Sprite):
                 all_sprites.remove(self)
                 if self != sp_ball:
                     out_sprites.add(self)
-                i.score += 1
                 break
 
 
@@ -171,7 +169,6 @@ class Corner(pygame.sprite.Sprite):
         self.image = corner_image
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
-        self.score = 0
         if len(corners) == 1:
             self.rect.x = 50
             self.rect.y = 160
@@ -201,30 +198,24 @@ out_sprites = pygame.sprite.Group()
 corners = pygame.sprite.Group()
 corner_image = load_image('corner.png')
 corner_image = pygame.transform.scale(corner_image, (45, 45))
-for i in range(6):
-    Corner()
-for i in range(15):
-    Ball((500, 400), i)
 sp_ball = Ball((500, 400), 15)
-f1 = pygame.font.Font(None, 40)
-text1 = f1.render('Игрок 1', True,
-                  (36, 9, 53))
-text2 = f1.render('Игрок 2', True,
-                  (36, 9, 53))
-p1_balls = [None, []]
-p2_balls = [None, []]
-turn = 0
-running = True
-screen.fill((40, 120, 80))
-drawing = False
-clock = pygame.time.Clock()
 
 
-def game():
+def pygame_start():
+    for i in range(6):
+        Corner()
+    for i in range(15):
+        Ball((500, 400), i)
     global sp_ball
-    global turn
-    global p1_balls
-    global p2_balls
+    scream_image = pygame.transform.scale(load_image('scream.jpeg'), (1000, 800))
+    bait_image = pygame.transform.scale(load_image('butto.jpeg'), (25, 25))
+    turn = 0
+    text1 = pygame.font.Font(None, 40).render('Игрок 1', True, (36, 9, 53))
+    text2 = pygame.font.Font(None, 40).render('Игрок 2', True, (36, 9, 53))
+    p1_balls = [None, []]
+    p2_balls = [None, []]
+    clock = pygame.time.Clock()
+    scr = False
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -237,6 +228,8 @@ def game():
                         if sp_ball.speed_x == 0 == sp_ball.speed_y:
                             sp_ball.speed_x = (sp_ball.rect.x + 15 - event.pos[0]) / 50
                             sp_ball.speed_y = (sp_ball.rect.y + 15 - event.pos[1]) / 50
+                elif 975 <= event.pos[0] and event.pos[1] <= 25:
+                    scr = True
         if len(out_sprites) == 1:
             a = [i for i in out_sprites][0]
             if a.num < 7:
@@ -251,7 +244,7 @@ def game():
                     p2_balls = ['stripe', [a.num]]
         elif len(out_sprites) > 1:
             a = [i for i in out_sprites][-1]
-            if p1_balls[0] == 'solid' and a.num < 7:
+            if (p1_balls[0] == 'solid' and a.num < 7) or (p1_balls[0] == 'stripe' and a.num > 8):
                 p1_balls[1].append(a.num)
             else:
                 p2_balls[1].append(a.num)
@@ -270,18 +263,23 @@ def game():
         pygame.draw.rect(screen, (0, 0, 0), (670, 30, 300, 100), 5, border_radius=100)
         screen.blit(text1, (70, 40))
         screen.blit(text2, (710, 40))
-        corners.draw(screen)
-        all_sprites.draw(screen)
-        all_sprites.update()
-        pygame.display.flip()
-        clock.tick(150)
-        if sum(map(lambda x: x.score, corners)) == 16:
+        screen.blit(bait_image, (975, 0))
+        if scr:
+            screen.blit(scream_image, (0, 0))
+            pygame.display.flip()
+            pygame.time.delay(5000)
+            scr = False
+        else:
+            corners.draw(screen)
+            all_sprites.draw(screen)
+            all_sprites.update()
+            pygame.display.flip()
+            clock.tick(150)
+        if len(p1_balls[1]) == 8 or len(p2_balls[1]) == 8:
             screen.fill((0, 0, 0))
             pygame.display.flip()
             pygame.time.delay(1000)
-            break
-
-    pygame.quit()
+            pygame.quit()
 
 
-game()
+pygame_start()
