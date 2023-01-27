@@ -219,7 +219,7 @@ def pygame_start():
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return
+                pygame.quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if 50 <= event.pos[0] < 950 and 160 <= event.pos[1] < 640:
                     if sp_ball not in all_sprites:
