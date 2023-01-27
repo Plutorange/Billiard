@@ -25,7 +25,7 @@ def load_image(name, color_key=None):
 class Ball(pygame.sprite.Sprite):
     def __init__(self, pos, num):
         super().__init__(all_sprites)
-        ball_image = load_image(f'ball{num + 1}.png')
+        ball_image = load_image(f'ball{num + 1}.png', -1)
         ball_image = pygame.transform.scale(ball_image, (30, 30))
         self.image = ball_image
         self.rect = self.image.get_rect()
@@ -196,7 +196,7 @@ screen = pygame.display.set_mode(size)
 all_sprites = pygame.sprite.Group()
 out_sprites = pygame.sprite.Group()
 corners = pygame.sprite.Group()
-corner_image = load_image('corner.png')
+corner_image = load_image('corner.png', -1)
 corner_image = pygame.transform.scale(corner_image, (45, 45))
 sp_ball = Ball((500, 400), 15)
 
