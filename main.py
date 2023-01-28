@@ -35,6 +35,14 @@ class GameInfo:
     username2 = ''
     winner = ''
 
+    @staticmethod
+    def getfirst(self, name):
+        GameInfo.username = name
+
+    @staticmethod
+    def getsecond(self, name):
+        GameInfo.username2 = name
+
 
 class Ball(pygame.sprite.Sprite):
     def __init__(self, pos, num, sprlist):
@@ -299,6 +307,3 @@ class Game:
                     Game.winner = GameInfo.username2
                 pygame.quit()
                 return
-
-
-Game.pygame_start()
