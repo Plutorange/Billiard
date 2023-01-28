@@ -244,13 +244,17 @@ class Game:
                 if a.num < 7:
                     if turn == 0:
                         p1_balls = ['solid', [a.num]]
+                        p2_balls[0] = 'stripe'
                     else:
                         p2_balls = ['solid', [a.num]]
+                        p1_balls[0] = 'stripe'
                 elif a.num > 8:
                     if turn == 0:
                         p1_balls = ['stripe', [a.num]]
+                        p2_balls[0] = 'solid'
                     else:
                         p2_balls = ['stripe', [a.num]]
+                        p1_balls[0] = 'solid'
             elif len(GameInfo.out_sprites) > 1:
                 a = [i for i in GameInfo.out_sprites][-1]
                 if (p1_balls[0] == 'solid' and a.num < 7) or (p1_balls[0] == 'stripe' and a.num > 8):
