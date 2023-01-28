@@ -1,8 +1,411 @@
+import copy
+import math
+import os
+import random
 import sys
 import sqlite3
+
+import pygame
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QLabel
+
+
+def load_image(name, color_key=None):
+    fullname = os.path.join('bil', name)
+    try:
+        image = pygame.image.load(fullname).convert()
+    except pygame.error as message:
+        print('Cannot load image:', name)
+        raise SystemExit(message)
+    if color_key is not None:
+        if color_key == -1:
+            color_key = image.get_at((0, 0))
+        image.set_colorkey(color_key)
+    else:
+        image = image.convert_alpha()
+    return image
+
+
+class Blow_up():
+    def __init__(self, x, y):
+        self.resolution = pygame.display.set_mode((1000, 800))
+        self.clock = pygame.time.Clock()
+        self.FPS = 120
+        self.color = [(218, 165, 32), (255, 36, 0), (255, 116, 23), (255, 191, 0), (255, 0, 0), (255, 219, 139),
+                      (205, 164, 52)]
+        self.x = x
+        self.y = y
+        self.angle = random.uniform(-60, 360)
+        self.value = random.uniform(.3, 4)
+        self.speed_x = self.value * math.cos(math.radians(self.angle))
+        self.speed_y = -1 * self.value * math.sin(math.radians(self.angle))
+        self.timing = 0
+        self.end_firework = False
+
+    def get_angle(self):
+        return math.atan2(-self.speed_y, self.speed_x)
+
+    def move(self):
+        self.x += self.speed_x
+        self.y += self.speed_y
+        self.timing += 1
+        if self.timing >= 100:
+            self.end_firework = True
+
+    def drawing(self):
+        angle = self.get_angle()
+        length = 1
+        delta_x = length * math.cos(angle)
+        delta_y = length * math.sin(angle)
+        pos_1 = [int(self.x + delta_y), int(self.y - delta_x)]
+        pos_2 = [int(self.x - delta_y), int(self.y + delta_x)]
+        pygame.draw.line(self.resolution, self.color[random.randint(0, 6)], pos_1, pos_2, 1)
+
+
+class Firework():
+    def __init__(self):
+        self.resolution = pygame.display.set_mode((1000, 800))
+        self.clock = pygame.time.Clock()
+        self.FPS = 120
+        self.x = random.randint(100, 900)
+        self.y = random.randint(100, 700)
+        self.speed = random.uniform(3.5, 7)
+        self.coord = random.uniform(10, 300)
+        self.end_firework = False
+
+    def move(self):
+        self.y -= self.speed
+        if self.y <= self.coord:
+            self.end_firework = True
+
+    def drawing(self):
+        pos_1 = [self.x, int(self.y + 15)]
+        pos_2 = [self.x, int(self.y - 15)]
+        pygame.draw.line(self.resolution, (0, 0, 0), pos_1, pos_2, 4)
+
+
+def game_start(winner):
+    resolution = pygame.display.set_mode((1000, 800))
+    clock = pygame.time.Clock()
+    FPS = 120
+    fireworks = [Firework()]
+    blow_ups = []
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+        if random.uniform(0, 1) <= 1 / 60:
+            fireworks.append(Firework())
+        resolution.fill((0, 0, 0))
+        for firework in fireworks:
+            firework.move()
+            firework.drawing()
+            if firework.end_firework:
+                blow_ups += [Blow_up(firework.x, firework.y) for i in range(800)]
+                fireworks.remove(firework)
+        for blow_up in blow_ups:
+            blow_up.move()
+            blow_up.drawing()
+            if blow_up.end_firework:
+                blow_ups.remove(blow_up)
+        f1 = pygame.font.Font(None, 80)
+        text1 = f1.render('Победа за {}!'.format(winner.upper()), True,
+                              (250, 255, 255))
+        resolution.blit(text1, (200, 350))
+        pygame.display.update()
+        clock.tick(FPS)
+
+
+
+class GameInfo:
+    pygame.init()
+    pygame.display.set_caption('Шарики')
+    size = width, height = 1000, 800
+    board_width, board_height = 900, 480
+    screen = pygame.display.set_mode(size)
+    all_sprites = pygame.sprite.Group()
+    out_sprites = pygame.sprite.Group()
+    corners = pygame.sprite.Group()
+    corner_image = load_image('corner.png', -1)
+    corner_image = pygame.transform.scale(corner_image, (45, 45))
+    username = ''
+    username2 = ''
+    winner = ''
+
+    @staticmethod
+    def getfirst(name):
+        GameInfo.username = name
+
+    @staticmethod
+    def getsecond(name):
+        GameInfo.username2 = name
+
+
+class Ball(pygame.sprite.Sprite):
+    def __init__(self, pos, num, sprlist):
+        super().__init__(sprlist)
+        GameInfo.all_sprites.add(self)
+        width, height = GameInfo.width, GameInfo.height
+        ball_image = load_image(f'ball{num + 1}.png', -1)
+        ball_image = pygame.transform.scale(ball_image, (30, 30))
+        self.image = ball_image
+        self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
+        self.num = num
+        if num == 0:
+            self.rect.x = 175
+            self.rect.y = 325
+        elif num == 1:
+            self.rect.x = 175
+            self.rect.y = 355
+        elif num == 2:
+            self.rect.x = 175
+            self.rect.y = 385
+        elif num == 3:
+            self.rect.x = 175
+            self.rect.y = 415
+        elif num == 4:
+            self.rect.x = 175
+            self.rect.y = 445
+        elif num == 5:
+            self.rect.x = 205
+            self.rect.y = 340
+        elif num == 6:
+            self.rect.x = 205
+            self.rect.y = 370
+        elif num == 7:
+            self.rect.x = 205
+            self.rect.y = 400
+        elif num == 8:
+            self.rect.x = 205
+            self.rect.y = 430
+        elif num == 9:
+            self.rect.x = 235
+            self.rect.y = 355
+        elif num == 10:
+            self.rect.x = 235
+            self.rect.y = 385
+        elif num == 11:
+            self.rect.x = 235
+            self.rect.y = 415
+        elif num == 12:
+            self.rect.x = 265
+            self.rect.y = 370
+        elif num == 13:
+            self.rect.x = 265
+            self.rect.y = 400
+        elif num == 14:
+            self.rect.x = 295
+            self.rect.y = 385
+        else:
+            self.rect.x = 485
+            self.rect.y = 385
+
+        self.speed_x = (width // 2 - pos[0]) / 50
+        self.speed_y = (height // 2 - pos[1]) / 50
+        self.dist_x = copy.deepcopy(self.rect.x)
+        self.dist_y = copy.deepcopy(self.rect.y)
+
+    def change_route(self, other):
+        if self.speed_x != 0 and self.speed_y != 0:
+            other.speed_x += abs(self.rect.x - other.rect.x) * (
+                    self.speed_x // abs(self.speed_x)) / 10
+            other.speed_y += abs(self.rect.y - other.rect.y) * (
+                    self.speed_y // abs(self.speed_y)) / 10
+            d1 = (self.speed_x ** 2 + self.speed_y ** 2) ** 0.5
+            d2 = (other.speed_x ** 2 + other.speed_y ** 2) ** 0.5
+            if d2 != 0:
+                dif = d1 / d2
+                other.speed_x = other.speed_x * dif / 2
+                other.speed_y = other.speed_y * dif / 2
+            self.rect = self.rect.move((self.dist_x - self.speed_x - self.rect.x),
+                                       (self.dist_y - self.speed_y - self.rect.y))
+            if self.speed_y > 0:
+                if self.speed_x > other.speed_x:
+                    self.speed_x = -other.speed_y
+                    self.speed_y = other.speed_x
+                elif other.speed_x == 0:
+                    self.speed_y = -other.speed_y
+                    self.speed_x = other.speed_x
+                else:
+                    self.speed_x = other.speed_y
+                    self.speed_y = -other.speed_x
+            elif self.speed_y < 0:
+                if self.speed_x < other.speed_x:
+                    self.speed_x = -other.speed_y
+                    self.speed_y = other.speed_x
+                elif other.speed_x == 0:
+                    self.speed_y = -other.speed_y
+                    self.speed_x = other.speed_x
+                else:
+                    self.speed_x = other.speed_y
+                    self.speed_y = -other.speed_x
+            else:
+                self.speed_y = other.speed_y
+                self.speed_x = -other.speed_x
+        self.dist_x += self.speed_x
+        self.dist_y += self.speed_y
+
+    def update(self):
+        if self.dist_x + self.speed_x + 60 > 950:
+            self.speed_x *= -1
+        if self.dist_y + self.speed_y + 60 > 640:
+            self.speed_y *= -1
+        if self.rect.x + self.speed_x - 30 < 50:
+            self.speed_x *= -1
+        if self.rect.y + self.speed_y - 30 < 160:
+            self.speed_y *= -1
+        for i in GameInfo.all_sprites:
+            self.rect = self.rect.move(self.dist_x + self.speed_x - self.rect.x,
+                                       self.dist_y + self.speed_y - self.rect.y)
+            if self != i and pygame.sprite.collide_mask(self, i):
+                self.change_route(i)
+            else:
+                self.rect = self.rect.move((self.dist_x - self.speed_x - self.rect.x),
+                                           (self.dist_y - self.speed_y - self.rect.y))
+        self.dist_x += self.speed_x
+        self.dist_y += self.speed_y
+        self.rect = self.rect.move(self.dist_x - self.rect.x, self.dist_y - self.rect.y)
+        if abs(self.speed_x) < 0.01 and abs(self.speed_y) < 0.01:
+            self.speed_x = 0
+            self.speed_y = 0
+        for i in GameInfo.all_sprites:
+            if pygame.sprite.collide_mask(self, i) and self != i:
+                self.dist_x -= self.speed_x
+                self.dist_y -= self.speed_y
+                self.rect = self.rect.move(self.dist_x - self.rect.x, self.dist_y - self.rect.y)
+        self.speed_x /= 1.005
+        self.speed_y /= 1.005
+        for i in GameInfo.corners:
+            if pygame.sprite.collide_mask(self, i):
+                GameInfo.all_sprites.remove(self)
+                if self != Game.sp_ball:
+                    GameInfo.out_sprites.add(self)
+                break
+
+
+class Corner(pygame.sprite.Sprite):
+    def __init__(self, sprlist):
+        super().__init__(sprlist)
+        GameInfo.corners.add(self)
+        self.image = GameInfo.corner_image
+        self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
+        if len(GameInfo.corners) == 1:
+            self.rect.x = 55
+            self.rect.y = 165
+        elif len(GameInfo.corners) == 2:
+            self.rect.x = 55
+            self.rect.y = 590
+        elif len(GameInfo.corners) == 3:
+            self.rect.x = 900
+            self.rect.y = 165
+        elif len(GameInfo.corners) == 4:
+            self.rect.x = 900
+            self.rect.y = 590
+        elif len(GameInfo.corners) == 5:
+            self.rect.x = 485
+            self.rect.y = 160
+        elif len(GameInfo.corners) == 6:
+            self.rect.x = 485
+            self.rect.y = 595
+
+
+class Game:
+    sp_ball = Ball((500, 400), 15, GameInfo.all_sprites)
+
+    @staticmethod
+    def pygame_start():
+        for i in range(6):
+            Corner(GameInfo.corners)
+        for i in range(15):
+            Ball((500, 400), i, GameInfo.all_sprites)
+        scream_image = pygame.transform.scale(load_image('scream.jpeg'), (1000, 800))
+        bait_image = pygame.transform.scale(load_image('butto.jpeg'), (25, 25))
+        turn = 0
+        text1 = pygame.font.Font(None, 40).render(GameInfo.username, True, (36, 9, 53))
+        text2 = pygame.font.Font(None, 40).render(GameInfo.username2, True, (36, 9, 53))
+        p1_balls = [None, []]
+        p2_balls = [None, []]
+        clock = pygame.time.Clock()
+        scr = False
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if 50 <= event.pos[0] < 950 and 160 <= event.pos[1] < 640:
+                        if Game.sp_ball not in GameInfo.all_sprites:
+                            Game.sp_ball = Ball(event.pos, 15, GameInfo.all_sprites)
+                        else:
+                            if Game.sp_ball.speed_x == 0 == Game.sp_ball.speed_y:
+                                Game.sp_ball.speed_x = (Game.sp_ball.rect.x + 15 - event.pos[0]) / 50
+                                Game.sp_ball.speed_y = (Game.sp_ball.rect.y + 15 - event.pos[1]) / 50
+                    elif 975 <= event.pos[0] and event.pos[1] <= 25:
+                        scr = True
+            if len(GameInfo.out_sprites) == 1:
+                a = [i for i in GameInfo.out_sprites][0]
+                if a.num < 7:
+                    if turn == 0:
+                        p1_balls = ['solid', [a.num]]
+                        p2_balls[0] = 'stripe'
+                    else:
+                        p2_balls = ['solid', [a.num]]
+                        p1_balls[0] = 'stripe'
+                elif a.num > 8:
+                    if turn == 0:
+                        p1_balls = ['stripe', [a.num]]
+                        p2_balls[0] = 'solid'
+                    else:
+                        p2_balls = ['stripe', [a.num]]
+                        p1_balls[0] = 'solid'
+            elif len(GameInfo.out_sprites) > 1:
+                a = [i for i in GameInfo.out_sprites][-1]
+                if (p1_balls[0] == 'solid' and a.num < 7) or (p1_balls[0] == 'stripe' and a.num > 8):
+                    p1_balls[1].append(a.num)
+                else:
+                    p2_balls[1].append(a.num)
+            if Game.sp_ball.speed_x == 0 or 0 == Game.sp_ball.speed_y:
+                turn = (turn + 1) % 2
+            GameInfo.screen.fill((40, 120, 80))
+            pygame.draw.rect(GameInfo.screen, (50, 200, 50), (80, 190, 840, 420))
+            pygame.draw.rect(GameInfo.screen, (150, 75, 0), (50, 160, 900, 30))
+            pygame.draw.rect(GameInfo.screen, (150, 75, 0), (50, 160, 30, 480))
+            pygame.draw.rect(GameInfo.screen, (150, 75, 0), (50, 610, 900, 30))
+            pygame.draw.rect(GameInfo.screen, (150, 75, 0), (920, 160, 30, 480))
+            pygame.draw.circle(GameInfo.screen, (0, 0, 0), (500, 400), 10)
+            pygame.draw.rect(GameInfo.screen, (220, 220, 220), (30, 30, 300, 100), border_radius=100)
+            pygame.draw.rect(GameInfo.screen, (0, 0, 0), (30, 30, 300, 100), 5, border_radius=100)
+            pygame.draw.rect(GameInfo.screen, (220, 220, 220), (670, 30, 300, 100),
+                             border_radius=100)
+            pygame.draw.rect(GameInfo.screen, (0, 0, 0), (670, 30, 300, 100), 5, border_radius=100)
+            GameInfo.screen.blit(text1, (70, 40))
+            GameInfo.screen.blit(text2, (710, 40))
+            GameInfo.screen.blit(bait_image, (975, 0))
+            if scr:
+                GameInfo.screen.blit(scream_image, (0, 0))
+                pygame.display.flip()
+                pygame.time.delay(5000)
+                scr = False
+            else:
+                GameInfo.corners.draw(GameInfo.screen)
+                GameInfo.all_sprites.draw(GameInfo.screen)
+                GameInfo.all_sprites.update()
+                pygame.display.flip()
+                clock.tick(150)
+            if len(p1_balls[1]) == 1 or len(p2_balls[1]) == 1:
+                GameInfo.screen.fill((0, 0, 0))
+                pygame.display.flip()
+                pygame.time.delay(1000)
+                if len(p1_balls[1]) == 1:
+                    Game.winner = GameInfo.username
+                else:
+                    Game.winner = GameInfo.username2
+                game_start(Game.winner)
+                pygame.quit()
+                return
 
 
 class Game_Menu(object):
@@ -84,7 +487,9 @@ class Game_Buttons(QtWidgets.QWidget, Game_Menu):
         self.stats = Statistics()
 
     def play_(self):
-        pass
+        GameInfo.getfirst('Игрок1')
+        GameInfo.getsecond('Игрок2')
+        Game.pygame_start()
 
     def stats_(self):
         self.switch_window2.emit()
@@ -126,14 +531,14 @@ class Statistics_Ui(object):
         self.l_title_1 = QtWidgets.QLabel(stats_table)
         self.l_title_1.setGeometry(QtCore.QRect(80, 50, 200, 30))
         self.l_title_1.setStyleSheet("\n"
-                                   "color: White;\n"
-                                   "font: 14pt \".SF NS Text\";")
+                                     "color: White;\n"
+                                     "font: 14pt \".SF NS Text\";")
         self.l_title_1.setObjectName("l_title_1")
         self.l_title_2 = QtWidgets.QLabel(stats_table)
         self.l_title_2.setGeometry(QtCore.QRect(520, 50, 200, 30))
         self.l_title_2.setStyleSheet("\n"
-                                   "color: White;\n"
-                                   "font: 14pt \".SF NS Text\";")
+                                     "color: White;\n"
+                                     "font: 14pt \".SF NS Text\";")
         self.l_title_2.setObjectName("l_title_2")
         self.btn_back = QtWidgets.QPushButton(stats_table)
         self.btn_back.setGeometry(QtCore.QRect(270, 360, 200, 45))
@@ -155,6 +560,7 @@ class Statistics_Ui(object):
         self.l_title_1.setText(_translate("stats_table", "Таблица лидеров"))
         self.l_title_2.setText(_translate("stats_table", "Личных побед - "))
 
+
 class Statistics(QtWidgets.QWidget, Statistics_Ui):
     switch_window2 = QtCore.pyqtSignal()
 
@@ -164,14 +570,14 @@ class Statistics(QtWidgets.QWidget, Statistics_Ui):
         self.btn_back.clicked.connect(self.btn_back_handler)
         self.cont = Controller_2()
 
-    def pop_message(self,text=""):
+    def pop_message(self, text=""):
         msg = QtWidgets.QMessageBox()
         msg.setText("{}".format(text))
         msg.exec_()
 
     def load_data(self):
-        self.tableWidget.setItem(0,0, QtWidgets.QTableWidgetItem(str("Имя")))
-        self.tableWidget.setItem(0,1, QtWidgets.QTableWidgetItem(str("Победы")))
+        self.tableWidget.setItem(0, 0, QtWidgets.QTableWidgetItem(str("Имя")))
+        self.tableWidget.setItem(0, 1, QtWidgets.QTableWidgetItem(str("Победы")))
 
     def btn_back_handler(self):
         self.cont.next_step()
@@ -179,6 +585,7 @@ class Statistics(QtWidgets.QWidget, Statistics_Ui):
     def show_(self):
         self.stats = Statistics()
         self.stats.show()
+
 
 class Main_Menu(object):
 
@@ -331,6 +738,9 @@ class Login(QtWidgets.QWidget, Main_Menu):
         self.btn_newuser.clicked.connect(self.btn_newuser_handler)
         self.btn_ok.clicked.connect(self.btn_ok_handler)
 
+    def get_nickname(self):
+        return self.txt_username.text()
+
     def pop_message(self, text=""):
         msg = QtWidgets.QMessageBox()
         msg.setText("{}".format(text))
@@ -402,6 +812,7 @@ class Newuser(QtWidgets.QWidget, Ui_NewUser):
         txt_lastname_v = self.txt_lastname.text()
         txt_username_v = self.txt_username.text()
         txt_password_v = self.lineEdit.text()
+        txt_wins_v = '0'
 
         if (len(txt_firstname_v) <= 1
                 and len(txt_lastname_v) <= 1 and
@@ -590,6 +1001,9 @@ class Login_2(QtWidgets.QWidget, Main_Menu_2):
         self.btn_newuser.clicked.connect(self.btn_newuser_handler)
         self.btn_ok.clicked.connect(self.btn_ok_handler)
 
+    def get_nickname(self):
+        return self.txt_username.text()
+
     def pop_message(self, text=""):
         msg = QtWidgets.QMessageBox()
         msg.setText("{}".format(text))
@@ -736,8 +1150,8 @@ class Controller_2:
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
-    controller1 = Controller()
-    controller1.show_login_page()
+    controller = Controller()
+    controller.show_login_page()
     sys.exit(app.exec_())
 
 
