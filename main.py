@@ -36,11 +36,11 @@ class GameInfo:
     winner = ''
 
     @staticmethod
-    def getfirst(self, name):
+    def getfirst(name):
         GameInfo.username = name
 
     @staticmethod
-    def getsecond(self, name):
+    def getsecond(name):
         GameInfo.username2 = name
 
 
