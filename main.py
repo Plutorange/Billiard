@@ -230,7 +230,7 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if 50 <= event.pos[0] < 950 and 160 <= event.pos[1] < 640:
                         if Game.sp_ball not in GameInfo.all_sprites:
-                            GameInfo.sp_ball = Ball(event.pos, 15, GameInfo.all_sprites)
+                            Game.sp_ball = Ball(event.pos, 15, GameInfo.all_sprites)
                         else:
                             if Game.sp_ball.speed_x == 0 == Game.sp_ball.speed_y:
                                 Game.sp_ball.speed_x = (Game.sp_ball.rect.x + 15 - event.pos[0]) / 50
