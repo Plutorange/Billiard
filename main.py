@@ -31,6 +31,8 @@ class GameInfo:
     corners = pygame.sprite.Group()
     corner_image = load_image('corner.png', -1)
     corner_image = pygame.transform.scale(corner_image, (45, 45))
+    username = ''
+    username2 = ''
     winner = ''
 
 
@@ -216,8 +218,8 @@ class Game:
         scream_image = pygame.transform.scale(load_image('scream.jpeg'), (1000, 800))
         bait_image = pygame.transform.scale(load_image('butto.jpeg'), (25, 25))
         turn = 0
-        text1 = pygame.font.Font(None, 40).render('username', True, (36, 9, 53))
-        text2 = pygame.font.Font(None, 40).render('username2', True, (36, 9, 53))
+        text1 = pygame.font.Font(None, 40).render(GameInfo.username, True, (36, 9, 53))
+        text2 = pygame.font.Font(None, 40).render(GameInfo.username2, True, (36, 9, 53))
         p1_balls = [None, []]
         p2_balls = [None, []]
         clock = pygame.time.Clock()
@@ -288,9 +290,9 @@ class Game:
                 pygame.display.flip()
                 pygame.time.delay(1000)
                 if len(p1_balls[1]) == 8:
-                    Game.winner = 'username'
+                    Game.winner = GameInfo.username
                 else:
-                    Game.winner = 'username2'
+                    Game.winner = GameInfo.username2
                 pygame.quit()
                 return
 
