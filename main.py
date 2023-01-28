@@ -185,17 +185,17 @@ class Corner(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
         if len(GameInfo.corners) == 1:
-            self.rect.x = 50
-            self.rect.y = 160
+            self.rect.x = 55
+            self.rect.y = 165
         elif len(GameInfo.corners) == 2:
-            self.rect.x = 50
-            self.rect.y = 595
+            self.rect.x = 55
+            self.rect.y = 590
         elif len(GameInfo.corners) == 3:
-            self.rect.x = 905
-            self.rect.y = 160
+            self.rect.x = 900
+            self.rect.y = 165
         elif len(GameInfo.corners) == 4:
-            self.rect.x = 905
-            self.rect.y = 595
+            self.rect.x = 900
+            self.rect.y = 590
         elif len(GameInfo.corners) == 5:
             self.rect.x = 485
             self.rect.y = 160
